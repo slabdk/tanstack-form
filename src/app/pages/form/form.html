@@ -1,0 +1,17 @@
+<form (submit)="handleSubmit($event)">
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    @for (key of formKeys(); track $index) {
+      <ng-container [tanstackField]="form" [name]="key" #field="field">
+        <label [for]="field.api.name">{{ key }}</label>
+        <input
+          pInputText
+          [name]="field.api.name"
+          [value]="field.api.state.value"
+          (blur)="field.api.handleBlur()"
+          (input)="field.api.handleChange($any($event).target.value)"
+        />
+      </ng-container>
+    }
+  </div>
+  <p-button type="submit" severity="danger" [label]="'mahmut'" />
+</form>
