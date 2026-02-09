@@ -6,6 +6,11 @@ import { KovaIslemDTO } from './data.type';
   providedIn: 'root',
 })
 export class Data {
+  public saveFormData(payload: KovaIslemDTO): Observable<any> {
+    console.log('SAVE API PAYLOAD', payload);
+    return of(true);
+  }
+
   public getFormData(): Observable<KovaIslemDTO> {
     return of({
       id: 178,

@@ -1,17 +1,168 @@
 <form (submit)="handleSubmit($event)">
-  <div style="display: flex; flex-direction: column; gap: 20px">
+  <div style="display: flex; flex-direction: column; gap: 20px; padding: 1rem;">
+
     @for (key of formKeys(); track $index) {
-      <ng-container [tanstackField]="form" [name]="key" #field="field">
-        <label [for]="field.api.name">{{ key }}</label>
-        <input
-          pInputText
-          [name]="field.api.name"
-          [value]="field.api.state.value"
-          (blur)="field.api.handleBlur()"
-          (input)="field.api.handleChange($any($event).target.value)"
-        />
-      </ng-container>
+
+      @if (key === 'kovaMalzemeList') {
+
+        <ng-container [tanstackField]="form" name="kovaMalzemeList" #list="field">
+
+          <div class="card" style="border: 1px solid #e5e7eb; padding: 1rem; border-radius: 6px;">
+            <h3 style="margin-top: 0; color: #374151;">Kova Malzeme Listesi</h3>
+
+            <p-table
+              [value]="list.api.state.value"
+              [rowTrackBy]="trackByKovaMalzeme"
+              styleClass="p-datatable-gridlines p-datatable-striped"
+              [tableStyle]="{ 'min-width': '100%' }"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>ID</th>
+                  <th>Sıra</th>
+                  <th>Miktar</th>
+                  <th>Malzeme No</th>
+                  <th>Malzeme Açk.</th>
+                  <th>Ürün Tipi</th>
+                  <th style="width: 4rem; text-align: center">Sil</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-row let-i="rowIndex">
+                <tr>
+                  <td>
+                    <ng-container [tanstackField]="form" [name]="getRowName(i)" #fId="field">
+                      <input
+                        pInputText
+                        class="p-inputtext-sm"
+                        style="width: 100%"
+                        [value]="fId.api.state.value ?? ''"
+                        (blur)="fId.api.handleBlur()"
+                        (input)="fId.api.handleChange($any($event).target.value)"
+                      />
+                    </ng-container>
+                  </td>
+
+                  <td>
+                    <ng-container [tanstackField]="form" [name]="getRowSira(i)" #fSira="field">
+                      <input
+                        pInputText
+                        type="number"
+                        class="p-inputtext-sm"
+                        style="width: 100%"
+                        [value]="fSira.api.state.value ?? ''"
+                        (blur)="fSira.api.handleBlur()"
+                        (input)="fSira.api.handleChange($any($event).target.valueAsNumber)"
+                      />
+                    </ng-container>
+                  </td>
+
+                  <td>
+                    <ng-container [tanstackField]="form" [name]="getRowMiktar(i)" #fMiktar="field">
+                      <input
+                        pInputText
+                        type="number"
+                        class="p-inputtext-sm"
+                        style="width: 100%"
+                        [value]="fMiktar.api.state.value ?? ''"
+                        (blur)="fMiktar.api.handleBlur()"
+                        (input)="fMiktar.api.handleChange($any($event).target.valueAsNumber)"
+                      />
+                    </ng-container>
+                  </td>
+
+                  <td>
+                    <ng-container [tanstackField]="form" [name]="getMalzemeNo(i)" #fNo="field">
+                      <input
+                        pInputText
+                        class="p-inputtext-sm"
+                        style="width: 100%"
+                        [value]="fNo.api.state.value ?? ''"
+                        (blur)="fNo.api.handleBlur()"
+                        (input)="fNo.api.handleChange($any($event).target.value)"
+                      />
+                    </ng-container>
+                  </td>
+
+                  <td>
+                    <ng-container [tanstackField]="form" [name]="getMalzemeAck(i)" #fAck="field">
+                      <input
+                        pInputText
+                        class="p-inputtext-sm"
+                        style="width: 100%"
+                        [value]="fAck.api.state.value ?? ''"
+                        (blur)="fAck.api.handleBlur()"
+                        (input)="fAck.api.handleChange($any($event).target.value)"
+                      />
+                    </ng-container>
+                  </td>
+
+                  <td>
+                    <ng-container [tanstackField]="form" [name]="getUrunTipi(i)" #fTip="field">
+                      <input
+                        pInputText
+                        class="p-inputtext-sm"
+                        style="width: 100%"
+                        [value]="fTip.api.state.value ?? ''"
+                        (blur)="fTip.api.handleBlur()"
+                        (input)="fTip.api.handleChange($any($event).target.value)"
+                      />
+                    </ng-container>
+                  </td>
+
+                  <td style="text-align: center;">
+                    <button
+                      pButton
+                      type="button"
+                      icon="pi pi-trash"
+                      class="p-button-danger p-button-text p-button-rounded p-button-sm"
+                      (click)="list.api.removeValue(i)">
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+            <div style="margin-top: 1rem;">
+              <button
+                pButton
+                type="button"
+                label="Yeni Satır Ekle"
+                icon="pi pi-plus"
+                class="p-button-outlined p-button-secondary"
+                (click)="addKovaMalzemeRow(list.api)">
+              </button>
+            </div>
+
+          </div>
+        </ng-container>
+      }
+
+      @else {
+        <ng-container [tanstackField]="form" [name]="key" #field="field">
+          <div style="display: flex; flex-direction: column;">
+            <label [for]="field.api.name" style="font-weight: 600; margin-bottom: 0.5rem; color: #4b5563;">{{ key }}</label>
+            <input
+              pInputText
+              [id]="field.api.name"
+              [name]="field.api.name"
+              [value]="displayValue(key, field.api.state.value)"
+              (blur)="field.api.handleBlur()"
+              (input)="field.api.handleChange($any($event).target.value)"
+            />
+          </div>
+        </ng-container>
+      }
     }
   </div>
-  <p-button type="submit" severity="danger" [label]="'mahmut'" />
+
+  <div style="margin: 20px; padding: 0 1rem;">
+    <p-button
+      type="button"
+      label="KAYDET (Formu Gönder)"
+      icon="pi pi-save"
+      severity="success"
+      (onClick)="handleSaveClick()"
+    ></p-button>
+  </div>
 </form>
